@@ -14,17 +14,62 @@ datasource db {
     relationMode = "prisma"
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Potfolio {
+    id          String       @id @default(cuid())
+    userId      String
+    title       String
+    trades      Trade[]
+    investments Investment[]
+    fundings    Funding[]
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
+    user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
+    @@index([userId])
+}
 
-    @@index([name])
-    @@index([createdById])
+model Trade {
+    id          String   @id @default(cuid())
+    portfolioId String
+    date        DateTime
+    instrument  String
+    leverage    Int
+    entry       Decimal
+    sl          Decimal
+    tp          Decimal
+    result      Boolean
+    status      Boolean
+    comment     String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    portfolio   Potfolio @relation(fields: [portfolioId], references: [id])
+
+    @@index([portfolioId])
+}
+
+model Investment {
+    id          String   @id @default(cuid())
+    portfolioId String
+    entryPrice  Decimal
+    entryDate   DateTime
+    comment     String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    portfolio   Potfolio @relation(fields: [portfolioId], references: [id])
+
+    @@index([portfolioId])
+}
+
+model Funding {
+    id          String   @id @default(cuid())
+    portfolioId String
+    date        DateTime
+    amount      Decimal
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    portfolio   Potfolio @relation(fields: [portfolioId], references: [id])
+
+    @@index([portfolioId])
 }
 
 // Necessary for Next auth
@@ -58,14 +103,14 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String     @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?    @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
-    posts         Post[]
+    portfolios    Potfolio[]
 }
 
 model VerificationToken {
