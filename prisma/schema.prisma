@@ -14,7 +14,7 @@ datasource db {
     relationMode = "prisma"
 }
 
-model Potfolio {
+model Portfolio {
     id          String       @id @default(cuid())
     userId      String
     title       String
@@ -42,7 +42,7 @@ model Trade {
     comment     String
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
-    portfolio   Potfolio @relation(fields: [portfolioId], references: [id])
+    portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
 
     @@index([portfolioId])
 }
@@ -55,7 +55,7 @@ model Investment {
     comment     String
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
-    portfolio   Potfolio @relation(fields: [portfolioId], references: [id])
+    portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
 
     @@index([portfolioId])
 }
@@ -67,7 +67,7 @@ model Funding {
     amount      Decimal
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
-    portfolio   Potfolio @relation(fields: [portfolioId], references: [id])
+    portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
 
     @@index([portfolioId])
 }
@@ -110,7 +110,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    portfolios    Potfolio[]
+    portfolios    Portfolio[]
 }
 
 model VerificationToken {

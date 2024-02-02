@@ -1,14 +1,14 @@
-import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import { z } from "zod";
 
 export const portfolioRouter = createTRPCRouter({
-  getAllPortfolios: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.potfolio.findMany({ where: { user: ctx.session.user } });
+  getAllPortfolios: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.portfolio.findMany({include: { user: true }});
   }),
   createPortfolio: protectedProcedure
     .input(z.object({ title: z.string() }))
     .mutation(({ ctx, input }) => {
-      return ctx.db.potfolio.create({
+      return ctx.db.portfolio.create({
         data: {
           title: input.title,
           user: { connect: { id: ctx.session.user.id } },

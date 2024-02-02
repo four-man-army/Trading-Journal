@@ -6,7 +6,7 @@ import React from "react";
 export default function SignOutButton() {
   return (
     <input
-      className="btn"
+      className="btn w-fit mx-auto"
       type="button"
       value="Sign Out"
       onClick={() => signOut()}
